@@ -10,7 +10,6 @@
   },
   "dependencies": {
     "@google/generative-ai": "^0.24.1",
-    "@hookform/resolvers": "^5.2.2",
     "@radix-ui/react-label": "^2.1.8",
     "@radix-ui/react-progress": "^1.1.8",
     "@radix-ui/react-select": "^2.2.6",
@@ -25,8 +24,7 @@
     "react-dom": "19.2.3",
     "react-hook-form": "^7.71.1",
     "sonner": "^2.0.7",
-    "tailwind-merge": "^3.4.0",
-    "zod": "^4.3.6"
+    "tailwind-merge": "^3.4.0"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

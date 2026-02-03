@@ -7,33 +7,23 @@ import {
   Card,
   CardHeader,
   CardTitle,
-  CardContent,
   CardDescription,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
 import { Separator } from "@/components/ui/separator";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import {
-  User,
-  LogOut,
-  Apple,
-  Flame,
-  Zap,
-  ShieldAlert,
-  TrendingUp,
-  Dumbbell,
-  BrainCircuit,
-  Utensils,
-  RefreshCw,
-} from "lucide-react";
+import { User, LogOut, BrainCircuit, HomeIcon } from "lucide-react";
 import { aiService } from "../services/aiServices";
-import { calculateBMI, getHealthyWeightRange } from "@/lib/utils";
 import DashboardSkeleton from "@/components/skeletons/DashboardSkeleton";
-import MetricCard from "@/components/MetriCard";
+import IaResponseCard from "@/components/IaResponseCard";
+import KcalCard from "@/components/KcalCard";
+import EnergyDataCard from "@/components/EnergyDataCard";
+import UserBiomtricDataCard from "@/components/UserBiomtricDataCard";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function DashboardPage() {
+  const router = useRouter();
   const [data, setData] = useState<{
     userData: UserData;
     routine: UserRoutine;
@@ -46,15 +36,9 @@ export default function DashboardPage() {
     const initDashboard = async () => {
       try {
         const localData = localStorage.getItem("userData");
+        const localIARes = localStorage.getItem("iaAnalysis");
 
         if (!localData) {
-          toast.error("No se encontraron datos", {
-            description: "Por favor completa el formulario de perfil primero.",
-            action: {
-              label: "Ir al Inicio",
-              onClick: () => (window.location.href = "/"),
-            },
-          });
           setLoading(false);
           return;
         }
@@ -62,8 +46,17 @@ export default function DashboardPage() {
         const parsed = JSON.parse(localData);
         setData(parsed);
 
+        if (localIARes) {
+          const localRes = JSON.parse(localIARes);
+          setLoading(false);
+          setRes(localRes);
+          return;
+        }
+
         const iaResponse = await aiService.analyzeData(parsed);
         setRes(iaResponse as unknown as IAAnalysis);
+
+        localStorage.setItem("iaAnalysis", JSON.stringify(iaResponse));
 
         toast.success("Datos sincronizados", {
           description: "Tu análisis biométrico está actualizado.",
@@ -84,7 +77,7 @@ export default function DashboardPage() {
 
   if (loading) return <DashboardSkeleton />;
 
-  if (!data) {
+  if (!data || !res) {
     return (
       <div className="min-h-[60vh] flex flex-col items-center justify-center p-8 text-center space-y-4 animate-in fade-in zoom-in-95 duration-500">
         <div className="bg-muted p-6 rounded-full">
@@ -95,54 +88,40 @@ export default function DashboardPage() {
           No hemos encontrado datos biométricos recientes. Necesitas configurar
           tu perfil para ver el dashboard.
         </p>
-        <Button onClick={() => (window.location.href = "/")}>
+        <Button
+          className="bg-plt-primary hover:bg-plt-primary/80"
+          onClick={() => (window.location.href = "/createUser")}
+        >
           Configurar Perfil
         </Button>
       </div>
     );
   }
 
-  const bmi = Number(calculateBMI(data.userData.weight, data.userData.height));
-  const healthy = getHealthyWeightRange(data.userData.height);
-  const progressPercentage = res?.metabolismo
-    ? (res.metabolismo.objetivo_calorico /
-        res.metabolismo.calorias_mantenimiento) *
-      100
-    : 0;
-
   return (
     <div className="min-h-screen bg-background/50 p-4 md:p-8 space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
       <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b pb-6">
-        <div className="space-y-1">
-          <div className="flex items-center gap-2">
-            <div className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-            <span className="text-xs font-medium text-emerald-600 uppercase tracking-widest">
-              Sistema en línea
-            </span>
-          </div>
-          <h1 className="text-3xl font-bold tracking-tight">Health Core</h1>
+        <div className="flex justify-center items-center gap-4">
+          <div className="h-2 w-2 rounded-full bg-plt-primary animate-pulse" />
+          <h1 className="sm:text-3xl text-lg font-bold tracking-tight text-plt-primary">
+            Recomendaciones de salud
+          </h1>
         </div>
         <div className="flex gap-2">
           <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => window.location.reload()}
-            title="Recargar datos"
-          >
-            <RefreshCw className="h-4 w-4 text-muted-foreground" />
-          </Button>
-          <Button
             variant="outline"
+            className="bg-plt-primary text-white hover:bg-plt-primary/85 hover:text-white hover:cursor-pointer"
             onClick={() => {
               toast.promise(
                 new Promise((resolve) => {
-                  localStorage.clear();
+                  localStorage.removeItem("userData");
+                  localStorage.removeItem("iaAnalysis");
                   setTimeout(resolve, 1000);
                 }),
                 {
                   loading: "Cerrando sesión...",
                   success: () => {
-                    window.location.href = "/";
+                    router.push("/");
                     return "Sesión cerrada correctamente";
                   },
                   error: "Error al cerrar sesión",
@@ -151,100 +130,29 @@ export default function DashboardPage() {
             }}
           >
             <LogOut className="mr-2 h-4 w-4" />
-            Salir
+            Cerrar Sesion
+          </Button>
+          <Button
+            variant="outline"
+            className="flex justify-center items-center"
+            asChild
+          >
+            <Link href="/">
+              <HomeIcon />
+            </Link>
           </Button>
         </div>
       </header>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        <div className="lg:col-span-7 space-y-6">
+        <div className="lg:col-span-7 space-y-6 self-start sticky top-5 md:top-9">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <Card className="md:col-span-2 border-primary/20 bg-gradient-to-br from-primary/10 via-background to-background relative overflow-hidden">
-              <CardHeader className="pb-2 relative z-10">
-                <CardDescription>Objetivo Diario</CardDescription>
-                <div className="flex items-baseline gap-1">
-                  <h2 className="text-5xl font-extrabold tracking-tighter text-foreground">
-                    {res?.metabolismo.objetivo_calorico || "---"}
-                  </h2>
-                  <span className="text-lg font-medium text-muted-foreground">
-                    kcal
-                  </span>
-                </div>
-              </CardHeader>
-              <CardContent className="relative z-10">
-                <div className="flex items-center gap-4 text-sm mb-2">
-                  <Badge
-                    variant="secondary"
-                    className="bg-background/80 backdrop-blur"
-                  >
-                    TMB: {res?.metabolismo.tmb}
-                  </Badge>
-                  <span className="text-muted-foreground text-xs">
-                    Mant: {res?.metabolismo.calorias_mantenimiento}
-                  </span>
-                </div>
-                <Progress value={progressPercentage} className="h-2" />
-              </CardContent>
+            <KcalCard metabolismo={res.metabolismo} />
 
-              <Flame className="absolute -right-6 -top-6 h-48 w-48 text-primary/5 rotate-12" />
-            </Card>
-
-            <Card className="md:col-span-2">
-              <CardContent className="p-6">
-                <div className="grid grid-cols-3 gap-4">
-                  <MetricCard
-                    label="Proteína"
-                    value={`${res?.macros.proteinas || 0}g`}
-                    icon={<Dumbbell className="h-4 w-4 text-sky-500" />}
-                    className="text-blue-600 dark:text-blue-400"
-                  />
-                  <MetricCard
-                    label="Carbos"
-                    value={`${res?.macros.carbohidratos || 0}g`}
-                    icon={<Zap className="h-4 w-4 text-amber-500" />}
-                    className="text-amber-600 dark:text-amber-400"
-                  />
-                  <MetricCard
-                    label="Grasas"
-                    value={`${res?.macros.grasas || 0}g`}
-                    icon={<Apple className="h-4 w-4 text-emerald-500" />}
-                    className="text-rose-600 dark:text-rose-400"
-                  />
-                </div>
-              </CardContent>
-            </Card>
+            <EnergyDataCard macros={res.macros} />
           </div>
 
-          <Card>
-            <CardHeader className="pb-3">
-              <CardTitle className="text-base font-medium flex items-center gap-2">
-                <User className="h-4 w-4" /> Datos Biométricos
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-                <MetricCard
-                  label="IMC"
-                  value={bmi.toFixed(1)}
-                  sub="kg/m²"
-                  trend={
-                    healthy ? `Ideal: ${healthy.min}-${healthy.max}` : undefined
-                  }
-                />
-                <MetricCard
-                  label="Peso"
-                  value={data.userData.weight}
-                  sub="kg"
-                />
-                <MetricCard
-                  label="Altura"
-                  value={data.userData.height}
-                  sub="cm"
-                />
-                <MetricCard label="Edad" value={data.userData.age} sub="años" />
-              </div>
-            </CardContent>
-          </Card>
+          <UserBiomtricDataCard userData={data.userData} />
         </div>
 
         <div className="lg:col-span-5 space-y-6">
@@ -258,12 +166,14 @@ export default function DashboardPage() {
                 {res && (
                   <Badge
                     variant={
-                      Number(res.analisis_rutina.puntuacion_eficiencia) >= 8
-                        ? "default"
+                      Number(
+                        res.analisis_rutina.puntuacion_eficiencia.toString()[0],
+                      ) <= 4
+                        ? "destructive"
                         : "secondary"
                     }
                   >
-                    Score: {res.analisis_rutina.puntuacion_eficiencia}/10
+                    Score: {res.analisis_rutina.puntuacion_eficiencia}
                   </Badge>
                 )}
               </div>
@@ -274,53 +184,11 @@ export default function DashboardPage() {
 
             <Separator className="mb-4" />
 
-            <CardContent className="space-y-6">
-              <Alert className="bg-indigo-50 dark:bg-indigo-950/30 border-indigo-200 dark:border-indigo-900">
-                <TrendingUp className="h-4 w-4 text-indigo-600 dark:text-indigo-400" />
-                <AlertTitle className="text-indigo-900 dark:text-indigo-200 text-sm font-bold">
-                  Estrategia Clave
-                </AlertTitle>
-                <AlertDescription className="text-indigo-800 dark:text-indigo-300 text-xs mt-1">
-                  {res?.plan_accion.ajuste_inmediato ||
-                    "Generando estrategia..."}
-                </AlertDescription>
-              </Alert>
-
-              <div className="space-y-3">
-                <h4 className="text-xs font-bold uppercase tracking-widest text-muted-foreground flex items-center gap-2">
-                  <Utensils className="h-3 w-3" /> Recomendaciones Nutricionales
-                </h4>
-                <div className="flex flex-wrap gap-2">
-                  {res?.plan_accion.alimentos_clave.map((item, i) => (
-                    <Badge
-                      key={i}
-                      variant="outline"
-                      className="bg-background hover:bg-accent transition-colors"
-                    >
-                      {item}
-                    </Badge>
-                  )) || (
-                    <div className="h-8 w-full bg-muted/50 rounded animate-pulse" />
-                  )}
-                </div>
-              </div>
-
-              {res?.advertencias && res.advertencias.length > 0 && (
-                <div className="rounded-lg border border-destructive/20 bg-destructive/5 p-4">
-                  <div className="flex items-center gap-2 text-destructive mb-2">
-                    <ShieldAlert className="h-4 w-4" />
-                    <span className="text-xs font-bold uppercase">
-                      Precauciones
-                    </span>
-                  </div>
-                  <ul className="list-disc list-inside text-xs text-muted-foreground space-y-1">
-                    {res.advertencias.map((adv, i) => (
-                      <li key={i}>{adv}</li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-            </CardContent>
+            <IaResponseCard
+              ajuste_inmediato={res?.plan_accion.ajuste_inmediato}
+              alimentos_clave={res?.plan_accion.alimentos_clave}
+              advertencias={res?.advertencias}
+            />
           </Card>
         </div>
       </div>

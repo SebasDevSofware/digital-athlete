@@ -14,7 +14,7 @@ export default function DashboardSkeleton() {
           </div>
         </div>
         <div className="col-span-5">
-          <Skeleton className="h-[500px] w-full rounded-3xl" />
+          <Skeleton className="h-125 w-full rounded-3xl" />
         </div>
       </div>
     </div>
