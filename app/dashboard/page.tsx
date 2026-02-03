@@ -145,7 +145,7 @@ export default function DashboardPage() {
       </header>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        <div className="lg:col-span-7 space-y-6 self-start sticky top-5 md:top-9">
+        <div className="lg:col-span-7 space-y-6 self-start md:sticky block top-5 md:top-9">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <KcalCard metabolismo={res.metabolismo} />
 
