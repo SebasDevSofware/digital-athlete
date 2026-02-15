@@ -1,8 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { IAAnalysis, UserData, UserRoutine } from "../types";
 import {
   Card,
   CardHeader,
@@ -13,7 +11,6 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { User, LogOut, BrainCircuit, HomeIcon } from "lucide-react";
-import { aiService } from "../services/aiServices";
 import DashboardSkeleton from "@/components/skeletons/DashboardSkeleton";
 import IaResponseCard from "@/components/IaResponseCard";
 import KcalCard from "@/components/KcalCard";
@@ -21,59 +18,13 @@ import EnergyDataCard from "@/components/EnergyDataCard";
 import UserBiomtricDataCard from "@/components/UserBiomtricDataCard";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import useIAResponse from "../hooks/useIAResponse";
 
 export default function DashboardPage() {
   const router = useRouter();
-  const [data, setData] = useState<{
-    userData: UserData;
-    routine: UserRoutine;
-  } | null>(null);
+  const { data, loading, res } = useIAResponse();
 
-  const [loading, setLoading] = useState(true);
-  const [res, setRes] = useState<IAAnalysis | null>(null);
-
-  useEffect(() => {
-    const initDashboard = async () => {
-      try {
-        const localData = localStorage.getItem("userData");
-        const localIARes = localStorage.getItem("iaAnalysis");
-
-        if (!localData) {
-          setLoading(false);
-          return;
-        }
-
-        const parsed = JSON.parse(localData);
-        setData(parsed);
-
-        if (localIARes) {
-          const localRes = JSON.parse(localIARes);
-          setLoading(false);
-          setRes(localRes);
-          return;
-        }
-
-        const iaResponse = await aiService.analyzeData(parsed);
-        setRes(iaResponse as unknown as IAAnalysis);
-
-        localStorage.setItem("iaAnalysis", JSON.stringify(iaResponse));
-
-        toast.success("Datos sincronizados", {
-          description: "Tu análisis biométrico está actualizado.",
-          duration: 2000,
-        });
-      } catch (err) {
-        console.error(err);
-        toast.error("Error de análisis", {
-          description:
-            "No pudimos procesar los datos con la IA en este momento.",
-        });
-      } finally {
-        setLoading(false);
-      }
-    };
-    initDashboard();
-  }, []);
+  console.log(res?.clima_y_entorno);
 
   if (loading) return <DashboardSkeleton />;
 
@@ -145,7 +96,7 @@ export default function DashboardPage() {
       </header>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        <div className="lg:col-span-7 space-y-6 self-start md:sticky block top-5 md:top-9">
+        <div className="lg:col-span-7 space-y-6 self-start md:sticky sm:sticky block top-5 md:top-9">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <KcalCard metabolismo={res.metabolismo} />
 

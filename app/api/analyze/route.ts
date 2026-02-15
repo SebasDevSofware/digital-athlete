@@ -1,3 +1,4 @@
+import { getEnvironmentData } from "@/app/services/getEnvData";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { NextResponse } from "next/server";
 
@@ -8,25 +9,31 @@ const gemini = new GoogleGenerativeAI(
 export async function POST(req: Request) {
   const { userData, routine } = await req.json();
 
+  const environmentData = await getEnvironmentData(userData.lat, userData.lot);
+  console.log(environmentData);
+
   const model = gemini.getGenerativeModel({
     model: "gemini-2.5-flash",
     generationConfig: { responseMimeType: "application/json" },
   });
 
   const prompt = `
-  Actúa como un Nutricionista Clínico y Coach Deportivo de Élite. 
+  Actúa como un Nutricionista Clínico, Coach Deportivo de Élite y Especialista en Salud Ambiental. 
   
   CONTEXTO DEL USUARIO:
   - Biometría: ${JSON.stringify(userData)}
   - Entrenamiento: ${JSON.stringify(routine)}
+  - Entorno Actual (Cambio Climático/Calidad del Aire): ${JSON.stringify(environmentData)}
 
   TAREA:
-  Analiza los datos y genera un plan integral de optimización en formato JSON.
+  Analiza los datos biométricos junto con las condiciones climáticas externas para generar un plan integral de optimización en formato JSON.
   
   REGLAS DE RESPUESTA:
-  1. Calcula el TMB (Tasa Metabólica Basal) usando la fórmula de Harris-Benedict.
-  2. Determina la distribución de Macronutrientes según el objetivo "${userData.goal}".
-  3. Evalúa el riesgo de lesiones según las limitaciones: "${userData.limitations ?? "ninguna"}".
+  1. Calcula el TMB usando la fórmula de Harris-Benedict.
+  2. Determina macros según el objetivo "${userData.goal}".
+  3. Evalúa riesgo de lesiones según: "${userData.limitations ?? "ninguna"}".
+  4. CRÍTICO: Ajusta las recomendaciones de hidratación y esfuerzo respiratorio basándote en la temperatura (${environmentData.temp}°C) y la calidad del aire (AQI: ${environmentData.aqi}).
+  
 
   RESPONDE ÚNICAMENTE CON UN OBJETO JSON SIGUIENDO ESTA ESTRUCTURA:
   {
@@ -44,6 +51,12 @@ export async function POST(req: Request) {
       "critica": "string",
       "puntuacion_eficiencia": "1-10",
       "volumen_semanal": "análisis de carga"
+    },
+    "clima_y_entorno": {
+      "riesgo_exposicion": "bajo/medio/alto",
+      "impacto_cardiovascular": "string",
+      "ajuste_por_contaminacion": "string",
+      "hidratacion_climatica": "ml adicionales recomendados"
     },
     "plan_accion": {
       "alimentos_clave": ["string", "string", "string"],

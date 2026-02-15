@@ -11,6 +11,16 @@ export type Goal =
   | "mantener"
   | "mejorar_resistencia";
 
+export type ExperienceLevel = "principiante" | "intermedio" | "avanzado";
+
+export interface EnvironmentData {
+  temp: number;
+  humidity: number;
+  aqi: number;
+  mainPollutant: string;
+  location: string;
+}
+
 export type UserData = {
   age: int;
   weight: float;
@@ -19,9 +29,14 @@ export type UserData = {
   activityLevel: ActivityLevel;
   limitations?: string;
   goal: Goal;
+  bmi: float;
+  healthyWeightRange: {
+    min: number;
+    max: number;
+  };
+  lat: float;
+  lot: float;
 };
-
-export type ExperienceLevel = "principiante" | "intermedio" | "avanzado";
 
 export interface UserRoutine {
   description: string;
@@ -53,4 +68,10 @@ export interface IAAnalysis {
     suplementacion_sugerida: string[];
   };
   advertencias: string[];
+  clima_y_entorno: {
+    riesgo_exposicion: "bajo" | "medio" | "alto";
+    impacto_cardiovascular: string;
+    ajuste_por_contaminacion: string;
+    hidratacion_climatica: string;
+  };
 }

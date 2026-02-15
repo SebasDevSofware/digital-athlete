@@ -2,17 +2,13 @@ import { User } from "lucide-react";
 import MetricCard from "./MetriCard";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { UserData } from "@/app/types";
-import { calculateBMI, getHealthyWeightRange } from "@/lib/utils";
 
 export default function UserBiomtricDataCard({
   userData,
 }: {
   userData: UserData;
 }) {
-  const bmi = Number(calculateBMI(userData.weight, userData.height));
-  const healthy = getHealthyWeightRange(userData.height);
-
-  const userObj =
+  const userGoal =
     userData.goal === "ganar_musculo"
       ? "Ganar musculo"
       : userData.goal === "mantener"
@@ -34,15 +30,19 @@ export default function UserBiomtricDataCard({
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
           <MetricCard
             label="IMC"
-            value={bmi.toFixed(1)}
+            value={userData.bmi}
             sub="kg/m²"
-            trend={healthy ? `Ideal: ${healthy.min}-${healthy.max}` : undefined}
+            trend={
+              userData.healthyWeightRange
+                ? `Ideal: ${userData.healthyWeightRange.min}-${userData.healthyWeightRange.max}`
+                : undefined
+            }
           />
           <MetricCard label="Peso" value={userData.weight} sub="kg" />
           <MetricCard label="Altura" value={userData.height} sub="cm" />
           <MetricCard label="Edad" value={userData.age} sub="años" />
           <MetricCard label="Genero" value={userData.gender} />
-          <MetricCard label="Objetivo" value={userObj} />
+          <MetricCard label="Objetivo" value={userGoal} />
           <MetricCard
             label="Nivel de Actividad"
             value={userData.activityLevel}

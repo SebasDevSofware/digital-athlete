@@ -90,7 +90,7 @@ export default function Home() {
   };
 
   return (
-    <Card className="w-full mx-auto border-none shadow-xl">
+    <Card className="w-full mx-auto border-none shadow-xl bg-gray-100">
       <CardHeader>
         <CardTitle className="text-3xl font-bold text-plt-primary">
           Atleta Digital - Crea tu Perfil de Usuario
@@ -109,6 +109,7 @@ export default function Home() {
               <div className="space-y-2">
                 <Label>Edad</Label>
                 <Input
+                  className="border-slate-500"
                   type="number"
                   name="age"
                   placeholder="Ej: 30"
@@ -120,6 +121,7 @@ export default function Home() {
               <div className="space-y-2">
                 <Label>Peso (kg)</Label>
                 <Input
+                  className="border-slate-500"
                   type="number"
                   step="0.1"
                   name="weight"
@@ -132,6 +134,7 @@ export default function Home() {
               <div className="space-y-2">
                 <Label>Altura (cm)</Label>
                 <Input
+                  className="border-slate-500"
                   type="number"
                   name="height"
                   placeholder="Ej: 175"
@@ -146,7 +149,7 @@ export default function Home() {
               <div className="space-y-2">
                 <Label>Género</Label>
                 <Select name="gender" required aria-required="true">
-                  <SelectTrigger>
+                  <SelectTrigger className="border-slate-500">
                     <SelectValue placeholder="Selecciona" />
                   </SelectTrigger>
                   <SelectContent>
@@ -160,7 +163,7 @@ export default function Home() {
               <div className="space-y-2">
                 <Label>Nivel de Actividad</Label>
                 <Select name="activityLevel" required aria-required="true">
-                  <SelectTrigger>
+                  <SelectTrigger className="border-slate-500">
                     <SelectValue placeholder="Tu actividad diaria" />
                   </SelectTrigger>
                   <SelectContent>
@@ -178,7 +181,7 @@ export default function Home() {
               <div className="space-y-2">
                 <Label>Objetivo Principal</Label>
                 <Select name="goal" required aria-required="true">
-                  <SelectTrigger>
+                  <SelectTrigger className="border-slate-500">
                     <SelectValue placeholder="Selecciona tu meta" />
                   </SelectTrigger>
                   <SelectContent>
@@ -204,6 +207,7 @@ export default function Home() {
               <div className="space-y-2">
                 <Label>Días/Semana</Label>
                 <Input
+                  className="border-slate-500"
                   type="number"
                   name="frequency"
                   placeholder="Ej: 3"
@@ -215,6 +219,7 @@ export default function Home() {
               <div className="space-y-2">
                 <Label>Minutos/Sesión</Label>
                 <Input
+                  className="border-slate-500"
                   type="number"
                   name="duration"
                   placeholder="Ej: 60"
@@ -226,7 +231,7 @@ export default function Home() {
               <div className="space-y-2">
                 <Label>Experiencia</Label>
                 <Select name="experienceLevel" required aria-required="true">
-                  <SelectTrigger>
+                  <SelectTrigger className="border-slate-500">
                     <SelectValue placeholder="Nivel" />
                   </SelectTrigger>
                   <SelectContent>
@@ -242,7 +247,7 @@ export default function Home() {
               <Label>Describe tu rutina actual</Label>
               <Textarea
                 placeholder="Ej: Hago push/pull/legs, No tengo una Rutina"
-                className="min-h-25"
+                className="min-h-25 border-slate-500"
                 name="description"
               />
             </div>
@@ -259,7 +264,12 @@ export default function Home() {
           )}
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            <Button type="button" variant="outline" className="h-12" asChild>
+            <Button
+              type="button"
+              variant="outline"
+              className="h-12 border-slate-500"
+              asChild
+            >
               <Link href="/">
                 <ArrowLeft className="mr-2" /> Cancelar
               </Link>

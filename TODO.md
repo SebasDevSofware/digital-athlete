@@ -1,0 +1,6 @@
+- Responsive Dashboard
+- Componetizar funcion getCords()
+- Cursor pointer al dar al dashboard y que no haya perfil
+- Arreglar el BMI (NaN en el Data)
+- Renderizar Datos de clima y entorno en el dashboard
+- Cuando la posicion sea Desconocida, renderizar componente que pide al usuario activarla (o toast-sonner)
