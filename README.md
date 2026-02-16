@@ -1,36 +1,87 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Digital Athlete
 
-## Getting Started
+## Descripción General
 
-First, run the development server:
+Digital Athlete es una aplicación diseñada para ayudar a los usuarios a optimizar su rendimiento físico y salud mediante análisis personalizados basados en datos biométricos, rutinas de entrenamiento y factores ambientales.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Estructura del Proyecto
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+La aplicación está organizada en las siguientes carpetas principales:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- **app/**: Contiene las páginas y rutas principales de la aplicación.
+  - **createUser/**: Página para configurar el perfil del usuario.
+  - **dashboard/**: Página principal que muestra análisis y recomendaciones personalizadas.
+  - **api/**: Endpoints para procesar datos, como `/analyze`.
+  - **hooks/**: Hooks personalizados como `useIAResponse` para manejar lógica de estado y datos.
+  - **services/**: Servicios para interactuar con APIs externas y manejar lógica de negocio.
+- **components/**: Componentes reutilizables de la interfaz de usuario.
+  - **ui/**: Componentes básicos como botones, inputs, y tarjetas.
+  - **skeletons/**: Componentes de carga como `DashboardSkeleton`.
+- **lib/**: Funciones utilitarias y cliente API.
+- **public/**: Archivos estáticos como imágenes y fuentes.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Flujo de la Aplicación
 
-## Learn More
+1. **Inicio**: El usuario comienza en la página de configuración (`/createUser`) donde ingresa sus datos biométricos y detalles de su rutina.
+2. **Análisis**: Los datos ingresados se validan y almacenan en `localStorage`. Luego, se redirige al usuario al dashboard.
+3. **Dashboard**: Se muestran análisis personalizados, incluyendo:
+   - Metabolismo y macros.
+   - Datos ambientales (si se otorgan permisos de ubicación).
+   - Recomendaciones de IA basadas en los datos del usuario.
+4. **API**: El endpoint `/api/analyze` procesa los datos del usuario y devuelve análisis detallados.
 
-To learn more about Next.js, take a look at the following resources:
+## Stack Tecnológico
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- **Frontend**:
+  - Framework: [Next.js](https://nextjs.org/) (React).
+  - Componentes UI: TailwindCSS y componentes personalizados.
+- **Backend**:
+  - API Routes de Next.js para manejar lógica del servidor.
+- **Librerías**:
+  - `axios`: Para llamadas HTTP.
+  - `sonner`: Para notificaciones y toasts.
+- **Integraciones**:
+  - OpenWeatherMap API: Para datos climáticos y de calidad del aire.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Instalación y Ejecución
 
-## Deploy on Vercel
+1. Clona el repositorio:
+   ```bash
+   git clone <repo-url>
+   ```
+2. Instala las dependencias:
+   ```bash
+   pnpm install
+   ```
+3. Configura las variables de entorno:
+   - Crea un archivo `.env.local` y agrega tu clave de API de OpenWeatherMap:
+     ```env
+     OPENWEATHERMAP_API_KEY=tu_api_key
+     ```
+4. Ejecuta el servidor de desarrollo:
+   ```bash
+   pnpm dev
+   ```
+5. Abre la aplicación en [http://localhost:3000](http://localhost:3000).
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Contribución
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. Crea un branch para tu feature o fix:
+   ```bash
+   git checkout -b feature/nueva-funcionalidad
+   ```
+2. Realiza tus cambios y crea un commit:
+   ```bash
+   git commit -m "Descripción de los cambios"
+   ```
+3. Sube tus cambios y crea un Pull Request.
+
+## TODOs
+
+- Mejorar el diseño responsivo del dashboard.
+- Componetizar la función `getCoords`.
+- Mostrar datos ambientales cuando la ubicación es desconocida.
+
+---
+
+**Diseñado para maximizar el rendimiento físico y la salud.**

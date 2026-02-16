@@ -20,31 +20,20 @@ import {
 } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
-import {
-  ActivityLevel,
-  ExperienceLevel,
-  Gender,
-  Goal,
-  UserData,
-  UserRoutine,
-} from "../types";
+import { ActivityLevel, ExperienceLevel, Gender, Goal } from "../types";
 import validationsInputsErrors from "../services/validationsInputsErrors";
 import { useRouter } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 
 export default function Home() {
-  const [data, setData] = useState<{
-    userData: UserData;
-    routine: UserRoutine;
-  } | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [errors, setErrors] = useState<string[]>([]);
   const router = useRouter();
 
-  const onSubmit = (e: FormEvent) => {
+  const onSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const form = e.currentTarget as HTMLFormElement;
+    const form = e.currentTarget;
     const formData = new FormData(form);
     const validationErrors = validationsInputsErrors(formData);
     if (validationErrors.length > 0) {
@@ -83,7 +72,6 @@ export default function Home() {
       },
     };
 
-    setData(newData);
     localStorage.setItem("userData", JSON.stringify(newData));
     localStorage.removeItem("iaAnalysis");
     router.push("/dashboard");

@@ -3,21 +3,7 @@ import { IAAnalysis, UserData, UserRoutine } from "../types";
 import { aiService } from "../services/aiServices";
 import { toast } from "sonner";
 import { calculateBMI, getHealthyWeightRange } from "@/lib/utils";
-
-const getCoords = (): Promise<{ lat: number; lon: number }> => {
-  const config = {
-    enableHighAccuracy: false,
-    timeout: 15000,
-    maximumAge: 0,
-  };
-  return new Promise((resolve, reject) => {
-    navigator.geolocation.getCurrentPosition(
-      (pos) => resolve({ lat: pos.coords.latitude, lon: pos.coords.longitude }),
-      (err) => reject(err),
-      config,
-    );
-  });
-};
+import { getCoords } from "../services/getUserCoords";
 
 export default function useIAResponse() {
   const [data, setData] = useState<{
@@ -39,31 +25,38 @@ export default function useIAResponse() {
           return;
         }
 
-        const parsed = JSON.parse(localData);
+        const parsed = JSON.parse(localData) as {
+          userData: UserData;
+          routine: UserRoutine;
+        };
 
-        // --- CORRECCIÓN AQUÍ ---
         let lat = 0;
         let lot = 0;
-
         try {
-          const coords = await getCoords(); // AHORA SÍ ESPERAMOS
+          const coords = await getCoords();
           lat = coords.lat;
           lot = coords.lon;
         } catch (geoErr) {
           console.warn(
-            "No se pudo obtener la ubicación, usando valores por defecto.",
+            "No se puediron obtener las coordenadas del usuario:",
+            geoErr,
           );
-          console.error(geoErr);
         }
+        const bmi = Number(
+          calculateBMI(parsed.userData.weight, parsed.userData.height),
+        );
+        const healty = getHealthyWeightRange(parsed.userData.height);
 
         const newData = {
           ...parsed,
-          bmi: Number(calculateBMI(parsed.weight, parsed.height)),
-          healthyWeightRange: getHealthyWeightRange(parsed.height),
-          lat: lat,
-          lot: lot,
+          userData: {
+            ...parsed.userData,
+            bmi: bmi,
+            healthyWeightRange: healty,
+            lat: lat,
+            lot: lot,
+          },
         };
-
         console.log(newData);
 
         setData(newData);

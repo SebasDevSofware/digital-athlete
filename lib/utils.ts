@@ -10,7 +10,7 @@ export const calculateBMI = (weight: number, height: number): number => {
 };
 
 export const getHealthyWeightRange = (height: number) => {
-  const min = (18.5 * (height / 100) ** 2).toFixed(1);
-  const max = (24.9 * (height / 100) ** 2).toFixed(1);
+  const min = parseFloat((18.5 * (height / 100) ** 2).toFixed(1));
+  const max = parseFloat((24.9 * (height / 100) ** 2).toFixed(1));
   return { min, max };
 };

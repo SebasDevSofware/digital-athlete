@@ -49,7 +49,7 @@ export async function POST(req: Request) {
     },
     "analisis_rutina": {
       "critica": "string",
-      "puntuacion_eficiencia": "1-10",
+      "puntuacion_eficiencia": "1-10" Solo responde con una puntuacion del 1 al 10 siempre,
       "volumen_semanal": "análisis de carga"
     },
     "clima_y_entorno": {

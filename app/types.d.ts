@@ -29,13 +29,13 @@ export type UserData = {
   activityLevel: ActivityLevel;
   limitations?: string;
   goal: Goal;
-  bmi: float;
-  healthyWeightRange: {
+  bmi?: float;
+  healthyWeightRange?: {
     min: number;
     max: number;
   };
-  lat: float;
-  lot: float;
+  lat?: float;
+  lot?: float;
 };
 
 export interface UserRoutine {
@@ -44,6 +44,13 @@ export interface UserRoutine {
   duration: number;
   experienceLevel: ExperienceLevel;
   lastUpdated: string;
+}
+
+export interface IAEnvAnalysis {
+  riesgo_exposicion: "bajo" | "medio" | "alto";
+  impacto_cardiovascular: string;
+  ajuste_por_contaminacion: string;
+  hidratacion_climatica: string;
 }
 
 export interface IAAnalysis {
@@ -68,10 +75,5 @@ export interface IAAnalysis {
     suplementacion_sugerida: string[];
   };
   advertencias: string[];
-  clima_y_entorno: {
-    riesgo_exposicion: "bajo" | "medio" | "alto";
-    impacto_cardiovascular: string;
-    ajuste_por_contaminacion: string;
-    hidratacion_climatica: string;
-  };
+  clima_y_entorno: IAEnvAnalysis;
 }

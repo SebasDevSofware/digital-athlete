@@ -19,12 +19,11 @@ import UserBiomtricDataCard from "@/components/UserBiomtricDataCard";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import useIAResponse from "../hooks/useIAResponse";
+import EnvironmentDataCard from "@/components/EnvDataCard";
 
 export default function DashboardPage() {
   const router = useRouter();
   const { data, loading, res } = useIAResponse();
-
-  console.log(res?.clima_y_entorno);
 
   if (loading) return <DashboardSkeleton />;
 
@@ -40,7 +39,7 @@ export default function DashboardPage() {
           tu perfil para ver el dashboard.
         </p>
         <Button
-          className="bg-plt-primary hover:bg-plt-primary/80"
+          className="bg-plt-primary hover:bg-plt-primary/80 hover:cursor-pointer"
           onClick={() => (window.location.href = "/createUser")}
         >
           Configurar Perfil
@@ -83,31 +82,45 @@ export default function DashboardPage() {
             <LogOut className="mr-2 h-4 w-4" />
             Cerrar Sesion
           </Button>
-          <Button
-            variant="outline"
-            className="flex justify-center items-center"
-            asChild
-          >
+          <Button variant="outline" asChild>
             <Link href="/">
-              <HomeIcon />
+              <HomeIcon className="h-4 w-4" />
             </Link>
           </Button>
         </div>
       </header>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        <div className="lg:col-span-7 space-y-6 self-start md:sticky sm:sticky block top-5 md:top-9">
+      {/* CAMBIO CLAVE 1: items-start evita que las columnas se estiren forzosamente.
+       */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        {/* COLUMNA IZQUIERDA: Ahora fluye normal. Es la que contiene más info.
+         */}
+        <div className="lg:col-span-7 space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <KcalCard metabolismo={res.metabolismo} />
-
             <EnergyDataCard macros={res.macros} />
           </div>
 
           <UserBiomtricDataCard userData={data.userData} />
+
+          {res.clima_y_entorno &&
+          data.userData.lat !== 0 &&
+          data.userData.lot !== 0 ? (
+            <EnvironmentDataCard data={res.clima_y_entorno} />
+          ) : (
+            <div className="sm:text-xl text-sm text-red-500 font-semibold text-center p-4 border border-red-200 rounded">
+              Sin permisos para acceder a la ubicacion, no se pueden mostrar
+              datos ambientales.
+            </div>
+          )}
         </div>
 
-        <div className="lg:col-span-5 space-y-6">
-          <Card className="h-full border-none shadow-lg bg-card/50 backdrop-blur-sm ring-1 ring-border">
+        {/* COLUMNA DERECHA: Ahora es la STICKY. 
+            CAMBIO CLAVE 2: h-fit asegura que el contenedor no sea más largo que su contenido.
+            CAMBIO CLAVE 3: top-8 para dejar espacio estético al hacer scroll.
+        */}
+        <div className="lg:col-span-5 lg:sticky lg:top-8 h-fit space-y-6">
+          <Card className="border-none shadow-lg bg-card/50 backdrop-blur-sm ring-1 ring-border">
             <CardHeader>
               <div className="flex justify-between items-center">
                 <div className="flex items-center gap-2">
