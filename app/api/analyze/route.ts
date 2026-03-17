@@ -56,7 +56,7 @@ export async function POST(req: Request) {
       "riesgo_exposicion": "bajo/medio/alto",
       "impacto_cardiovascular": "string",
       "ajuste_por_contaminacion": "string",
-      "hidratacion_climatica": "ml adicionales recomendados"
+      "hidratacion_climatica": "numero de ml adicionales recomendados" (solo el numero)
     },
     "plan_accion": {
       "alimentos_clave": ["string", "string", "string"],

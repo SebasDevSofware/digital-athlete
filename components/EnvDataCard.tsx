@@ -21,7 +21,7 @@ export default function EnvironmentDataCard({ data }: { data: IAEnvAnalysis }) {
 
   return (
     <Card className="border-none shadow-lg bg-card/50 backdrop-blur-sm ring-1 ring-border">
-      <CardHeader className="flex flex-row items-center justify-between pb-2">
+      <CardHeader className="flex flex-col items-center justify-between pb-2">
         <div className="flex items-center gap-2">
           <CloudSun className="h-5 w-5 text-plt-primary" />
           <CardTitle className="text-lg font-semibold text-foreground">
@@ -32,7 +32,7 @@ export default function EnvironmentDataCard({ data }: { data: IAEnvAnalysis }) {
           variant="outline"
           className={`${getRiskStyles(
             data.riesgo_exposicion,
-          )} capitalize px-3 py-1`}
+          )} capitalize px-3 py-1 truncate whitespace-normal`}
         >
           Riesgo {data.riesgo_exposicion}
         </Badge>
@@ -68,7 +68,7 @@ export default function EnvironmentDataCard({ data }: { data: IAEnvAnalysis }) {
             <span className="text-sm font-medium">Hidratación</span>
           </div>
           <p className="text-sm text-muted-foreground leading-relaxed">
-            {data.hidratacion_climatica}
+            {data.hidratacion_climatica} ml
           </p>
         </div>
       </CardContent>
