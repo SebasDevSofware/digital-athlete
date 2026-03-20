@@ -1,87 +1,66 @@
-# Digital Athlete
+# CONTEXT.md
 
-## Descripción General
+## Resumen del Proyecto
 
-Digital Athlete es una aplicación diseñada para ayudar a los usuarios a optimizar su rendimiento físico y salud mediante análisis personalizados basados en datos biométricos, rutinas de entrenamiento y factores ambientales.
+**Atleta Digital** es una aplicación web de coaching personalizado para fitness y nutrición que aprovecha la inteligencia artificial para proporcionar recomendaciones de salud adaptadas a cada usuario. La plataforma funciona como un entrenador personal y nutricionista digital, analizando datos biométricos individuales junto con condiciones ambientales en tiempo real para ofrecer recomendaciones accionables que optimizan el rendimiento deportivo y el bienestar general.
 
-## Estructura del Proyecto
+## El Problema que Resuelve
 
-La aplicación está organizada en las siguientes carpetas principales:
+Los atletas y entusiastas del fitness frecuentemente enfrentan dificultades con consejos genéricos de entrenamiento y nutrición que no consideran sus circunstancias particulares. Los desafíos principales incluyen:
 
-- **app/**: Contiene las páginas y rutas principales de la aplicación.
-  - **createUser/**: Página para configurar el perfil del usuario.
-  - **dashboard/**: Página principal que muestra análisis y recomendaciones personalizadas.
-  - **api/**: Endpoints para procesar datos, como `/analyze`.
-  - **hooks/**: Hooks personalizados como `useIAResponse` para manejar lógica de estado y datos.
-  - **services/**: Servicios para interactuar con APIs externas y manejar lógica de negocio.
-- **components/**: Componentes reutilizables de la interfaz de usuario.
-  - **ui/**: Componentes básicos como botones, inputs, y tarjetas.
-  - **skeletons/**: Componentes de carga como `DashboardSkeleton`.
-- **lib/**: Funciones utilitarias y cliente API.
-- **public/**: Archivos estáticos como imágenes y fuentes.
+- **Recomendaciones estandarizadas**: La mayoría de las aplicaciones de fitness ofrecen consejos homogéneos que ignoran las diferencias individuales en composición corporal, objetivos y circunstancias
+- **Factores ambientales ignorados**: Las condiciones climáticas, la calidad del aire y la temperatura impactan significativamente en la seguridad y efectividad del entrenamiento, sin embargo rara vez se consideran en la planificación fitness
+- **Seguimiento fragmentado**: Los usuarios deben manejar múltiples aplicaciones para controlar nutrición, planificar entrenamientos y monitorear su salud
+- **Falta de orientación profesional**: Los entrenadores personales y nutricionistas son costosos, haciendo que el asesoramiento experto sea inaccesible para muchos
+- **Sobrecarga de información**: La abundancia de información fitness contradictoria dificulta que los usuarios determinen qué funciona realmente para su situación específica
 
-## Flujo de la Aplicación
+## Audiencia Objetivo
 
-1. **Inicio**: El usuario comienza en la página de configuración (`/createUser`) donde ingresa sus datos biométricos y detalles de su rutina.
-2. **Análisis**: Los datos ingresados se validan y almacenan en `localStorage`. Luego, se redirige al usuario al dashboard.
-3. **Dashboard**: Se muestran análisis personalizados, incluyendo:
-   - Metabolismo y macros.
-   - Datos ambientales (si se otorgan permisos de ubicación).
-   - Recomendaciones de IA basadas en los datos del usuario.
-4. **API**: El endpoint `/api/analyze` procesa los datos del usuario y devuelve análisis detallados.
+- **Entusiastas del fitness** que buscan orientación personalizada sin el costo de un entrenador personal
+- **Atletas amateur y recreativos** interesados en optimizar su entrenamiento y nutrición
+- **Personas con objetivos fitness específicos** como ganar masa muscular, perder grasa, mejorar resistencia o mantener peso
+- **Usuarios conscientes de su salud** que desean recomendaciones basadas en ciencia adaptadas a su perfil biométrico
+- **Usuarios hispanohablantes** (idioma principal de la aplicación)
 
-## Stack Tecnológico
+## Características y Funcionalidades Principales
 
-- **Frontend**:
-  - Framework: [Next.js](https://nextjs.org/) (React).
-  - Componentes UI: TailwindCSS y componentes personalizados.
-- **Backend**:
-  - API Routes de Next.js para manejar lógica del servidor.
-- **Librerías**:
-  - `axios`: Para llamadas HTTP.
-  - `sonner`: Para notificaciones y toasts.
-- **Integraciones**:
-  - OpenWeatherMap API: Para datos climáticos y de calidad del aire.
+### Creación de Perfil de Usuario
+Los usuarios crean un perfil completo ingresando datos biométricos que incluyen edad, peso, altura, género, nivel de actividad y objetivo fitness principal (perder grasa, ganar músculo, mantener peso o mejorar resistencia). También proporcionan detalles de entrenamiento como frecuencia semanal, duración de las sesiones, nivel de experiencia y una descripción de su rutina actual.
 
-## Instalación y Ejecución
+### Análisis Personalizado con Inteligencia Artificial
+La aplicación utiliza Google Gemini AI para analizar el perfil completo del usuario y generar recomendaciones personalizadas que incluyen:
+- **Cálculos metabólicos**: Tasa metabólica basal (TMB), calorías de mantenimiento e ingesta calórica objetivo basada en la fórmula de Harris-Benedict
+- **Distribución de macronutrientes**: Recomendaciones personalizadas de proteínas, carbohidratos y grasas alineadas con el objetivo fitness del usuario
+- **Puntuación de eficiencia de rutina**: Una calificación del 1 al 10 sobre la efectividad del entrenamiento con crítica detallada y sugerencias de mejora
+- **Planes de acción**: Ajustes estratégicos inmediatos y recomendaciones de alimentos clave
 
-1. Clona el repositorio:
-   ```bash
-   git clone <repo-url>
-   ```
-2. Instala las dependencias:
-   ```bash
-   pnpm install
-   ```
-3. Configura las variables de entorno:
-   - Crea un archivo `.env.local` y agrega tu clave de API de OpenWeatherMap:
-     ```env
-     OPENWEATHERMAP_API_KEY=tu_api_key
-     ```
-4. Ejecuta el servidor de desarrollo:
-   ```bash
-   pnpm dev
-   ```
-5. Abre la aplicación en [http://localhost:3000](http://localhost:3000).
+### Integración de Contexto Ambiental
+La aplicación solicita permiso de ubicación para obtener datos ambientales en tiempo real incluyendo temperatura, humedad e índice de calidad del aire (AQI). Esta información se analiza para proporcionar:
+- **Evaluación de riesgo de exposición**: Clasificación de riesgo bajo, medio o alto basada en las condiciones actuales
+- **Impacto cardiovascular**: Cómo las condiciones climáticas pueden afectar la salud cardíaca durante el ejercicio
+- **Ajustes por calidad del aire**: Recomendaciones para modificar el entrenamiento al aire libre según los niveles de contaminación
+- **Recomendaciones de hidratación**: Necesidades adicionales de ingesta de agua basadas en temperatura y humedad
 
-## Contribución
+### Advertencias y Precauciones de Salud
+Basado en el análisis de IA y los datos ambientales, los usuarios reciben advertencias personalizadas sobre riesgos potenciales relacionados con la intensidad de entrenamiento, exposición ambiental y necesidades nutricionales.
 
-1. Crea un branch para tu feature o fix:
-   ```bash
-   git checkout -b feature/nueva-funcionalidad
-   ```
-2. Realiza tus cambios y crea un commit:
-   ```bash
-   git commit -m "Descripción de los cambios"
-   ```
-3. Sube tus cambios y crea un Pull Request.
+### Panel de Progreso
+Un panel centralizado muestra todos los datos personalizados en un formato visual organizado con:
+- Objetivos calóricos diarios con seguimiento de progreso
+- Distribución de macronutrientes (proteínas, carbohidratos, grasas)
+- Resumen biométrico (IMC, rango de peso saludable, medidas corporales)
+- Condiciones ambientales con indicadores de riesgo
+- Estrategias generadas por IA y sugerencias de alimentos
 
-## TODOs
+### Gestión de Sesiones
+Los usuarios pueden guardar su perfil localmente para conveniencia y cerrar sesión cuando terminen, con persistencia de datos entre sesiones.
 
-- Mejorar el diseño responsivo del dashboard.
-- Componetizar la función `getCoords`.
-- Mostrar datos ambientales cuando la ubicación es desconocida.
+## Resumen del Stack Tecnológico
 
----
-
-**Diseñado para maximizar el rendimiento físico y la salud.**
+- **Frontend**: Next.js 16, React 19, TypeScript, Tailwind CSS
+- **Componentes UI**: Primitivos Radix UI, componentes shadcn/ui, iconos Lucide
+- **Integración IA**: Google Generative AI (modelo Gemini 2.5 Flash)
+- **APIs Externas**: OpenWeatherMap API (datos climáticos y de contaminación del aire)
+- **Manejo de Formularios**: React Hook Form
+- **Estilos**: Tailwind CSS 4 con configuración de tema personalizado
+- **Herramientas de Build**: SWC, PostCSS
